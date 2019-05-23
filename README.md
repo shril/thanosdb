@@ -33,6 +33,8 @@ True
 >>> db.dump()
 True
 ```
+ 
+Tutorial - [Introduction to ThanosDB](https://nbviewer.jupyter.org/github/shril/thanosdb/blob/master/Introduction%20to%20ThanosDB.ipynb)
 
 #### Testing
 
