@@ -22,6 +22,16 @@ True
 True
 ```
 
+#### Testing
+
+Testing in ThanosDB is done using Python's [unittest](https://docs.python.org/2/library/unittest.html) module.
+
+In order to run test go inside package directory and run the following command
+
+```shell
+python -m unittest
+```
+
 #### Developers - 
 
 - Shril Kumar ([@shril](https://github.com/shril))
