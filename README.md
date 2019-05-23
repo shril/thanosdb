@@ -1,6 +1,6 @@
 ## ThanosDB
 
-![](C:\Users\KUMA2140\Documents\workspace\thanosdb\static\gaultlet.png)
+![](./static/gaultlet.png)
 
 A lightweight, fast and simple database based on [msgpack](<https://msgpack.org/index.html>) module. Born out of pure frustration of being unable to use Redis on windows, ThanosDB came into existence ([Drawbacks of Redis on Windows](<https://redislabs.com/ebook/appendix-a/a-3-installing-on-windows/a-3-1-drawbacks-of-redis-on-windows/>)). It is an open-source key-value store.
 
