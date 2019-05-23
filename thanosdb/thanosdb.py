@@ -12,7 +12,7 @@ def load(location, auto_dump, sig=True):
 
 class ThanosDB(object):
 
-    key_string_error = TypeError('Key/name must be a string!')
+    key_string_error = TypeError('Only string type is supported as key.')
 
     def __init__(self, location, auto_dump, sig):
         '''Creates a database object and loads the data from the location path.
@@ -66,7 +66,7 @@ class ThanosDB(object):
         
     def _loaddb(self):
         '''Load or reload the msgpack info from the file'''
-        self.db = msgpack.unpack(open(self.loco, 'rb'), encoding = "utf-8")
+        self.db = msgpack.unpack(open(self.loco, 'rb'), encoding = 'utf-8')
 
     def _autodumpdb(self):
         '''Write/save the msgpack dump into the file if auto_dump is enabled'''
@@ -132,8 +132,12 @@ class ThanosDB(object):
 
     def ladd(self, name, value):
         '''Add a value to a list'''
-        self.db[name].append(value)
-        self._autodumpdb()
+        if self.exists(name):
+            self.db[name].append(value)
+            self._autodumpdb()
+        else:
+            self.lcreate(name)
+            self.ladd(name, value)
         return True
 
     def lextend(self, name, seq):
@@ -182,7 +186,7 @@ class ThanosDB(object):
         return True
 
     def lexists(self, name, value):
-        '''Determine if a value  exists in a list'''
+        '''Determine if a value exists in a list'''
         return value in self.db[name]
 
     def dcreate(self, name):
@@ -196,8 +200,12 @@ class ThanosDB(object):
 
     def dadd(self, name, pair):
         '''Add a key-value pair to a dict, "pair" is a tuple'''
-        self.db[name][pair[0]] = pair[1]
-        self._autodumpdb()
+        if self.exists(name):
+            self.db[name][pair[0]] = pair[1]
+            self._autodumpdb()
+        else:
+            self.dcreate(name)
+            self.dadd(name, pair)
         return True
 
     def dget(self, name, key):
