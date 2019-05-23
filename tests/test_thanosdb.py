@@ -99,9 +99,4 @@ class TestClass(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main() 
-    tests = TestClass()
-    # test_methods = [method for method in dir(tests) if callable(getattr(tests, method)) if method.startswith('test_')]
-    # for method in test_methods:
-    #         getattr(tests, method)()  # run method
-    #         print(".", end="")
+    unittest.main()
