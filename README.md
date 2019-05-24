@@ -1,7 +1,11 @@
+<h1 align="center">
+	<img width="250" src="./static/ThanosDB.png" alt="thanosdb">
+	<br>
+	<br>
+</h1>
+
+
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/StrapDown.js/graphs/commit-activity) [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/) [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/dwyl/esta/issues)
-
-
-![](./static/gaultlet.png)
 
 ## ThanosDB
 
