@@ -7,7 +7,7 @@
 
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/StrapDown.js/graphs/commit-activity) [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/) [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/dwyl/esta/issues)
 
-## ThanosDB
+# ThanosDB
 
 A lightweight, fast and simple database based on [msgpack](<https://msgpack.org/index.html>) module. It is an platform agnostic, open-source **key-value** store. There are two primary reasons why this project came into existence -
 
@@ -19,7 +19,7 @@ In order to justify its name, it will *try* to -
 1. Reduce the read/write time of your database.
 2. Reduce the size of your storage. (*When compared to JSON*)
 
-##### Why ThanosDB uses MessagePack instead of using JSON, BSON?
+#### Why ThanosDB uses MessagePack instead of using JSON, BSON?
 
 [MessagePack](https://msgpack.org/index.html) is an efficient binary serialization format. It lets us exchange data among multiple languages like JSON. **But it's faster and smaller**. Small integers are encoded into a single byte, and typical short strings require only one extra byte in addition to the strings themselves. 
 
@@ -37,6 +37,8 @@ True
 >>> db.dump()
 True
 ```
+ 
+Tutorial - [Introduction to ThanosDB](https://nbviewer.jupyter.org/github/shril/thanosdb/blob/master/Introduction%20to%20ThanosDB.ipynb)
 
 #### Testing
 

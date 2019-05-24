@@ -1,2 +1,3 @@
-__pycache__/
+*.db
 .ipynb_checkpoints/
+__pycache__/
