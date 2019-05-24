@@ -1,5 +1,5 @@
 <h1 align="center">
-	<img width="250" src="./static/ThanosDB.png" alt="thanosdb">
+	<img width="450" src="./static/ThanosDB.png" alt="thanosdb">
 	<br>
 	<br>
 </h1>
