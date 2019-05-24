@@ -9,7 +9,7 @@ README = (HERE / "README.md").read_text()
 
 setuptools.setup(
     name="thanosdb",
-    version="0.0.1",
+    version="0.0.2",
     author="Shril Kumar",
     author_email="shril.iitdhn@gmail.com",
     description="A lightweight and fast database for Prototyping",
