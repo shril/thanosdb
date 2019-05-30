@@ -1,14 +1,13 @@
-import sys
+import msgpack
 import os
 import signal
-import msgpack
-from threading import Thread
+import sys
 
+from threading import Thread
 
 def load(location, auto_dump, sig=True):
     '''Return a thanosdb object. location is the path to the msgpack file.'''
     return ThanosDB(location, auto_dump, sig)
-
 
 class ThanosDB(object):
 
