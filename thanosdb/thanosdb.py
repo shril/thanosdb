@@ -10,6 +10,27 @@ def load(location, auto_dump, sig=True):
     return ThanosDB(location, auto_dump, sig)
 
 class ThanosDB(object):
+    """
+    Class constructor to create a new ThanosDB instance.
+
+    .. note::
+
+       Install MessagePack (`pip install msgpack`) as ThanosDB internally uses it for storage.
+    
+    :Example:
+ 
+    >>> from thanosdb import thanosdb
+    >>> db = thanosdb.load('avengers.db', True)
+
+        
+    :param location: location of msgpack database file
+    :type location: string
+    :param auto_dump: writes to disk after every operation
+    :type auto_dump: boolean
+    :param sig: used for graceful shutdown during dump
+    :type sig: boolean
+    
+    """
 
     key_string_error = TypeError('Only string type is supported as key.')
 
