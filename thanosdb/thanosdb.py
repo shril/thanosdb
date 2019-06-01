@@ -56,7 +56,12 @@ class ThanosDB(object):
         return self.rem(key)
 
     def set_sigterm_handler(self):
-        '''Assigns sigterm_handler for graceful shutdown during dump()'''
+        '''Assigns sigterm_handler for graceful shutdown during dump() 
+            
+            
+        *Ensures that the key-value operations get written to disk in case of db failure\
+            to maintain consistency.*  
+        '''
         def sigterm_handler():
             if self.dthread is not None:
                 self.dthread.join()
@@ -64,7 +69,22 @@ class ThanosDB(object):
         signal.signal(signal.SIGTERM, sigterm_handler)
 
     def load(self, location, auto_dump):
-        '''Loads, reloads or changes the path to the db file'''
+        '''Loads, reloads or changes the path to the db file
+        
+        :Example:
+ 
+        >>> from thanosdb import thanosdb
+        >>> db = thanosdb.load('avengers.db', True)
+
+            
+        :param location: location of msgpack database file
+        :type location: string
+        :param auto_dump: writes to disk after every operation
+        :type auto_dump: boolean
+        :param sig: used for graceful shutdown during dump
+        :type sig: boolean
+
+        '''
         location = os.path.expanduser(location)
         self.loco = location
         self.auto_dump = auto_dump
@@ -94,7 +114,20 @@ class ThanosDB(object):
             self.dump()
 
     def set(self, key, value):
-        '''Set the str value of a key'''
+        '''Set the str value of a key
+        
+        :Example:
+ 
+        >>> db.set('ironman', 'Tony Stark')
+
+            
+        :param key: input key
+        :type key: string
+        :param value: Value associated with the key
+        :type value: string
+        :return: True for successful execution else false.
+        :rtype: boolean
+        '''
         if isinstance(key, str):
             self.db[key] = value
             self._autodumpdb()
@@ -103,22 +136,62 @@ class ThanosDB(object):
             raise self.key_string_error
 
     def get(self, key):
-        '''Get the value of a key'''
+        '''Get the value of a key
+
+        :Example:
+ 
+        >>> db.get('ironman')
+
+        :param key: input key
+        :type key: string
+        :return: Value if key present else returns false.
+        '''
+
         try:
             return self.db[key]
         except KeyError:
             return False
 
     def getall(self):
-        '''Return a list of all keys in db'''
+        '''Return a list of all keys in db
+        
+        :Example:
+ 
+        >>> db.getall()
+
+        :return: List of all keys in db.
+        
+        '''
         return self.db.keys()
 
     def exists(self, key):
-        '''Return True if key exists in db, return False if not'''
+        '''Return True if key exists in db, return False if not
+        
+        :Example:
+ 
+        >>> db.exists('ironman')
+
+        :param key: input key
+        :type key: string
+        :return: True if key exists in db, else False.
+        :rtype: Boolean
+        
+        '''
         return key in self.db
 
     def rem(self, key):
-        '''Delete a key'''
+        '''Delete a key
+        
+        :Example:
+ 
+        >>> db.rem('ironman')
+
+        :param key: input key
+        :type key: string
+        :return: True if key exists in db and gets deleted, else False if no such key in db.
+        :rtype: Boolean
+
+        '''
         if not key in self.db: # return False instead of an exception
             return False
         del self.db[key]
