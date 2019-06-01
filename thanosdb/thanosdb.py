@@ -194,7 +194,17 @@ class ThanosDB(object):
         return True
 
     def totalkeys(self, name=None):
-        '''Get a total number of keys, lists, and dicts inside the db'''
+        '''Get a total number of keys, lists, and dicts inside the db
+        
+        :Example:
+
+        >>> db.totalkeys()
+
+        :param name: None or name of key of dict
+        :type name: string
+        :return: Count of number of keys of dict.
+        :rtype: int
+        '''
         if name is None:
             total = len(self.db)
             return total
@@ -203,14 +213,37 @@ class ThanosDB(object):
             return total
 
     def append(self, key, more):
-        '''Add more to a key's value'''
+        '''Add more to a key's value
+        
+        :Example:
+
+        >>> db.append('ironman','Jarvis')
+
+        :param key: Name of key of dict
+        :type key: string
+        :param more: Value associated with key
+        :type more: string
+        :return: True if successful execution else false.
+        :rtype: Boolean
+        
+        '''
         tmp = self.db[key]
         self.db[key] = tmp + more
         self._autodumpdb()
         return True
 
     def lcreate(self, name):
-        '''Create a list, name must be str'''
+        '''Create an empty list with key name, name must be str
+        
+        :Example:
+
+        >>> db.lcreate('avengers')
+
+        :param name: key of dict
+        :type name: string
+        :return: True if successful execution else false.
+        :rtype: Boolean
+        '''
         if isinstance(name, str):
             self.db[name] = []
             self._autodumpdb()
@@ -219,7 +252,20 @@ class ThanosDB(object):
             raise self.key_string_error
 
     def ladd(self, name, value):
-        '''Add a value to a list'''
+        '''Add a value to a list
+        
+        :Example:
+
+        >>> db.ladd('avengers','Iron Man')
+
+        :param name: key of dict
+        :type name: string
+        :param value: value to be appended to list with key *name*
+        :type value: string
+        :return: True if successful execution else false.
+        :rtype: Boolean
+        
+        '''
         if self.exists(name):
             self.db[name].append(value)
             self._autodumpdb()
@@ -229,52 +275,165 @@ class ThanosDB(object):
         return True
 
     def lextend(self, name, seq):
-        '''Extend a list with a sequence'''
+        '''Extend a list with a sequence
+        
+        :Example:
+
+        >>> db.lextend('avengers',['Captain America', 'Black Widow', 'Thor', 'Hawkeye'])
+
+        :param name: key of dict
+        :type name: string
+        :param seq: list to be appended to list associated with key *name* in dict
+        :type value: list
+        :return: True if successful execution else false.
+        :rtype: Boolean
+        
+        '''
         self.db[name].extend(seq)
         self._autodumpdb()
         return True
 
     def lgetall(self, name):
-        '''Return all values in a list'''
+        '''Return all values in a list
+        
+        :Example:
+
+        >>> db.lgetall('avengers')
+
+        :param name: key of dict
+        :type name: string
+        :return: List associated with key *name* in dict else false if key not present.
+        :rtype: Boolean
+
+        '''
         return self.db[name]
 
     def lget(self, name, pos):
-        '''Return one value in a list'''
+        '''Return one value in a list
+        
+        :Example:
+
+        >>> db.lget('avengers',1)
+
+        :param name: key of dict
+        :type name: string
+        :param pos: position of element in list
+        :type pos: int
+        :return: Value at index *pos* of list associated with key *name* in dict.
+        :rtype: String
+        
+        '''
         return self.db[name][pos]
 
     def lremlist(self, name):
-        '''Remove a list and all of its values'''
+        '''Remove a list and all of its values
+        
+        :Example:
+
+        >>> db.lremlist('avengers')
+
+        :param name: key of dict
+        :type name: string
+        :return: Length of list deleted from dict with key *name*.
+        :rtype: int
+        
+        '''
         number = len(self.db[name])
         del self.db[name]
         self._autodumpdb()
         return number
 
     def lremvalue(self, name, value):
-        '''Remove a value from a certain list'''
+        '''Remove a value from a certain list
+        
+        :Example:
+
+        >>> db.lremvalue('avengers','Black Widow')
+
+        :param name: key of dict
+        :type name: string
+        :param value: Value to be deleted from list with key *name* 
+        :type value: string
+        :return: True if successful execution else false.
+        :rtype: Boolean
+        
+        '''
         self.db[name].remove(value)
         self._autodumpdb()
         return True
 
     def lpop(self, name, pos):
-        '''Remove one value in a list'''
+        '''Remove one value in a list
+        
+        :Example:
+
+        >>> db.lpop('avengers',1)
+
+        :param name: key of dict
+        :type name: string
+        :param pos: index of list to be deleted with key *name* 
+        :type pos: int
+        :return: Value of deleted item.
+        :rtype: string
+        
+        '''
         value = self.db[name][pos]
         del self.db[name][pos]
         self._autodumpdb()
         return value
 
     def llen(self, name):
-        '''Returns the length of the list'''
+        '''Returns the length of the list
+        
+        :Example:
+
+        >>> db.llen('avengers')
+
+        :param name: key of dict
+        :type name: string
+        :return: Length of list associated with key *name* in dict.
+        :rtype: int
+        
+        '''
         return len(self.db[name])
 
     def lappend(self, name, pos, more):
-        '''Add more to a value in a list'''
+        '''Add more to a value in a list
+        
+        :Example:
+
+        >>> db.lappend('ironman',2,'Jarvis')
+
+        :param name: Name of key of dict
+        :type name: string
+        :param pos: Index of list
+        :type pos: int
+        :param more: string to be added with element at index *pos* of list associated with key *name*
+        :type more: string
+        :return: True if successful execution else false.
+        :rtype: Boolean
+        
+        '''
         tmp = self.db[name][pos]
         self.db[name][pos] = tmp + more
         self._autodumpdb()
         return True
 
     def lexists(self, name, value):
-        '''Determine if a value exists in a list'''
+        '''Determine if a value exists in a list
+        
+        :Example:
+
+        >>> db.lexists('ironman','Jarvis')
+
+        :param name: Name of key of dict
+        :type name: string
+        :param value: Element to check if present in list with key *name*
+        :type value: string
+        :return: True if *value* exists in list else false.
+        :rtype: Boolean
+        
+        '''
         return value in self.db[name]
 
     def dcreate(self, name):
