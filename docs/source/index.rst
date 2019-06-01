@@ -7,6 +7,7 @@ Welcome to ThanosDB!
 ====================
 
 Welcome to ThanosDb, a lightweight, fast and compact database based on msgpack module.
+This project is inspired by redis. It is licensed with the MIT License.
 Github_.
 
 >>> from thanosdb import thanosdb
