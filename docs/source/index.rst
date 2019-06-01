@@ -4,9 +4,10 @@
    contain the root `toctree` directive.
 
 Welcome to ThanosDB!
-====================================
+====================
 
 Welcome to ThanosDb, a lightweight, fast and compact database based on msgpack module.
+Github_.
 
 >>> from thanosdb import thanosdb
 >>> db = thanosdb.load('test.db', False)
