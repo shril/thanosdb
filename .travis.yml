@@ -1,8 +1,6 @@
 language: python
 
 python:
-  - "3.3"
-  - "3.4"
   - "3.5"
   - "3.6"
 # command to install dependencies
@@ -11,4 +9,3 @@ install:
 # command to run tests
 script:
   - python3 -m unittest tests/test_thanosdb.py -v
-  - python3 -m doctest -v thanosdb/thanosdb.py

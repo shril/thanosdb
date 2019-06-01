@@ -12,7 +12,7 @@ def load(location, auto_dump, sig=True):
 
 class ThanosDB(object):
     """
-    Class constructor to create a new ThanosDB instance.
+    ThanosDB base class to create a new instance.
 
     .. note::
 
@@ -20,7 +20,6 @@ class ThanosDB(object):
 
     :Example:
 
-    >>> from thanosdb import thanosdb
     >>> db = thanosdb.load('avengers.db', True)
 
     :param location: location of msgpack database file
