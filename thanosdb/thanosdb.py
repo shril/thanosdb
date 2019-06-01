@@ -1,9 +1,10 @@
-import msgpack
 import os
 import signal
 import sys
 
 from threading import Thread
+
+import msgpack
 
 def load(location, auto_dump, sig=True):
     '''Return a thanosdb object. location is the path to the msgpack file.'''
@@ -21,7 +22,6 @@ class ThanosDB(object):
 
     >>> from thanosdb import thanosdb
     >>> db = thanosdb.load('avengers.db', True)
-
 
     :param location: location of msgpack database file
     :type location: string
@@ -58,7 +58,6 @@ class ThanosDB(object):
     def set_sigterm_handler(self):
         '''Assigns sigterm_handler for graceful shutdown during dump()
 
-
         *Ensures that the key-value operations get written to disk in case of db failure\
             to maintain consistency.*
         '''
@@ -75,7 +74,6 @@ class ThanosDB(object):
 
         >>> from thanosdb import thanosdb
         >>> db = thanosdb.load('avengers.db', True)
-
 
         :param location: location of msgpack database file
         :type location: string
@@ -120,7 +118,6 @@ class ThanosDB(object):
 
         >>> db.set('ironman', 'Tony Stark')
 
-
         :param key: input key
         :type key: string
         :param value: Value associated with the key
@@ -146,7 +143,6 @@ class ThanosDB(object):
         :type key: string
         :return: Value if key present else returns false.
         '''
-
         try:
             return self.db[key]
         except KeyError:
