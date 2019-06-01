@@ -5,7 +5,7 @@
 </h1>
 
 
-[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/shril/thanosdb/graphs/commit-activity) [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/) [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/shril/thanosdb/issues) [![Build Status](https://travis-ci.com/shril/thanosdb.svg?branch=master)](https://travis-ci.com/shril/thanosdb) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/shril/thanosdb/graphs/commit-activity) [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/) [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/shril/thanosdb/issues) [![Build Status](https://travis-ci.com/shril/thanosdb.svg?branch=master)](https://travis-ci.com/shril/thanosdb) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Documentation Status](https://readthedocs.org/projects/thanosdb/badge/?version=latest)](https://thanosdb.readthedocs.io/en/latest/?badge=latest)
 
 # ThanosDB
 
