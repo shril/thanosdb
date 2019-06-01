@@ -16,20 +16,20 @@ class ThanosDB(object):
     .. note::
 
        Install MessagePack (`pip install msgpack`) as ThanosDB internally uses it for storage.
-    
+
     :Example:
- 
+
     >>> from thanosdb import thanosdb
     >>> db = thanosdb.load('avengers.db', True)
 
-        
+
     :param location: location of msgpack database file
     :type location: string
     :param auto_dump: writes to disk after every operation
     :type auto_dump: boolean
     :param sig: used for graceful shutdown during dump
     :type sig: boolean
-    
+
     """
 
     key_string_error = TypeError('Only string type is supported as key.')
@@ -56,11 +56,11 @@ class ThanosDB(object):
         return self.rem(key)
 
     def set_sigterm_handler(self):
-        '''Assigns sigterm_handler for graceful shutdown during dump() 
-            
-            
+        '''Assigns sigterm_handler for graceful shutdown during dump()
+
+
         *Ensures that the key-value operations get written to disk in case of db failure\
-            to maintain consistency.*  
+            to maintain consistency.*
         '''
         def sigterm_handler():
             if self.dthread is not None:
@@ -70,13 +70,13 @@ class ThanosDB(object):
 
     def load(self, location, auto_dump):
         '''Loads, reloads or changes the path to the db file
-        
+
         :Example:
- 
+
         >>> from thanosdb import thanosdb
         >>> db = thanosdb.load('avengers.db', True)
 
-            
+
         :param location: location of msgpack database file
         :type location: string
         :param auto_dump: writes to disk after every operation
@@ -103,10 +103,10 @@ class ThanosDB(object):
         self.dthread.start()
         self.dthread.join()
         return True
-        
+
     def _loaddb(self):
         '''Load or reload the msgpack info from the file'''
-        self.db = msgpack.unpack(open(self.loco, 'rb'), encoding = 'utf-8')
+        self.db = msgpack.unpack(open(self.loco, 'rb'), encoding='utf-8')
 
     def _autodumpdb(self):
         '''Write/save the msgpack dump into the file if auto_dump is enabled'''
@@ -115,12 +115,12 @@ class ThanosDB(object):
 
     def set(self, key, value):
         '''Set the str value of a key
-        
+
         :Example:
- 
+
         >>> db.set('ironman', 'Tony Stark')
 
-            
+
         :param key: input key
         :type key: string
         :param value: Value associated with the key
@@ -139,7 +139,7 @@ class ThanosDB(object):
         '''Get the value of a key
 
         :Example:
- 
+
         >>> db.get('ironman')
 
         :param key: input key
@@ -154,36 +154,36 @@ class ThanosDB(object):
 
     def getall(self):
         '''Return a list of all keys in db
-        
+
         :Example:
- 
+
         >>> db.getall()
 
         :return: List of all keys in db.
-        
+
         '''
         return self.db.keys()
 
     def exists(self, key):
         '''Return True if key exists in db, return False if not
-        
+
         :Example:
- 
+
         >>> db.exists('ironman')
 
         :param key: input key
         :type key: string
         :return: True if key exists in db, else False.
         :rtype: Boolean
-        
+
         '''
         return key in self.db
 
     def rem(self, key):
         '''Delete a key
-        
+
         :Example:
- 
+
         >>> db.rem('ironman')
 
         :param key: input key
