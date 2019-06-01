@@ -11,25 +11,27 @@ def load(location, auto_dump, sig=True):
     return ThanosDB(location, auto_dump, sig)
 
 class ThanosDB(object):
-    """
-    ThanosDB base class to create a new instance.
+    '''
+    A key-value based data structure which internally uses msgpack
+    for storing data. Serialization and deserialization of data
+    happens during dumping and loading operations.
 
     .. note::
 
-       Install MessagePack (`pip install msgpack`) as ThanosDB internally uses it for storage.
+       Install MessagePack as ThanosDB internally uses it for storage.
 
     :Example:
 
+    >>> from thanosdb import thanosdb
     >>> db = thanosdb.load('avengers.db', True)
 
     :param location: location of msgpack database file
     :type location: string
-    :param auto_dump: writes to disk after every operation
+    :param auto_dump: writes to disk after every operation if True
     :type auto_dump: boolean
-    :param sig: used for graceful shutdown during dump
+    :param sig: used for graceful shutdown during dump if True
     :type sig: boolean
-
-    """
+    '''
 
     key_string_error = TypeError('Only string type is supported as key.')
 
@@ -40,7 +42,7 @@ class ThanosDB(object):
         self.load(location, auto_dump)
         self.dthread = None
         if sig:
-            self.set_sigterm_handler()
+            self._set_sigterm_handler()
 
     def __getitem__(self, item):
         '''Syntax sugar for get()'''
@@ -54,7 +56,7 @@ class ThanosDB(object):
         '''Sytax sugar for rem()'''
         return self.rem(key)
 
-    def set_sigterm_handler(self):
+    def _set_sigterm_handler(self):
         '''Assigns sigterm_handler for graceful shutdown during dump()
 
         *Ensures that the key-value operations get written to disk in case of db failure\
@@ -72,7 +74,7 @@ class ThanosDB(object):
         :Example:
 
         >>> from thanosdb import thanosdb
-        >>> db = thanosdb.load('avengers.db', True)
+        >>> db = thanosdb.load('avengers.db', True, False)
 
         :param location: location of msgpack database file
         :type location: string
@@ -80,7 +82,6 @@ class ThanosDB(object):
         :type auto_dump: boolean
         :param sig: used for graceful shutdown during dump
         :type sig: boolean
-
         '''
         location = os.path.expanduser(location)
         self.loco = location
@@ -92,7 +93,17 @@ class ThanosDB(object):
         return True
 
     def dump(self):
-        '''Force dump memory db to file'''
+        '''
+        Force dump memory db to file.
+
+        :Example:
+
+        >>> db.dump()
+        True
+
+        :return: True
+        :rtype: Boolean
+        '''
         msgpack.pack(self.db, open(self.loco, 'wb'))
         self.dthread = Thread(
             target=msgpack.pack,
@@ -116,11 +127,12 @@ class ThanosDB(object):
         :Example:
 
         >>> db.set('ironman', 'Tony Stark')
+        True
 
-        :param key: input key
+        :param key: Name of the key to add in db
         :type key: string
         :param value: Value associated with the key
-        :type value: string
+        :type value: string, dict, list
         :return: True for successful execution else false.
         :rtype: boolean
         '''
@@ -137,8 +149,9 @@ class ThanosDB(object):
         :Example:
 
         >>> db.get('ironman')
+        'Tony Stark'
 
-        :param key: input key
+        :param key: Name of key in db
         :type key: string
         :return: Value if key present else returns false.
         '''
@@ -153,9 +166,10 @@ class ThanosDB(object):
         :Example:
 
         >>> db.getall()
+        dict_keys(['ironman', 'thor', 'black-widow'])
 
         :return: List of all keys in db.
-
+        :rtype: dict_keys
         '''
         return self.db.keys()
 
@@ -165,12 +179,12 @@ class ThanosDB(object):
         :Example:
 
         >>> db.exists('ironman')
+        True
 
         :param key: input key
         :type key: string
         :return: True if key exists in db, else False.
         :rtype: Boolean
-
         '''
         return key in self.db
 
@@ -180,12 +194,12 @@ class ThanosDB(object):
         :Example:
 
         >>> db.rem('ironman')
+        True
 
-        :param key: input key
+        :param key: Name of the key to add in db
         :type key: string
         :return: True if key exists in db and gets deleted, else False if no such key in db.
         :rtype: Boolean
-
         '''
         if not key in self.db: # return False instead of an exception
             return False
@@ -199,6 +213,7 @@ class ThanosDB(object):
         :Example:
 
         >>> db.totalkeys()
+        5
 
         :param name: None or name of key of dict
         :type name: string
@@ -217,9 +232,14 @@ class ThanosDB(object):
         
         :Example:
 
-        >>> db.append('ironman','Jarvis')
+        >>> db.set('thor', 'Thor Odinson')
+        True
+        >>> db.append('thor', ' - God of Thunder')
+        True
+        >>> db.get('thor')
+        'Thor Odinson - God of Thunder'
 
-        :param key: Name of key of dict
+        :param key: Name of key in db
         :type key: string
         :param more: Value associated with key
         :type more: string
@@ -256,7 +276,7 @@ class ThanosDB(object):
         
         :Example:
 
-        >>> db.ladd('avengers','Iron Man')
+        >>> db.ladd('avengers', 'Iron Man')
 
         :param name: key of dict
         :type name: string
@@ -279,15 +299,15 @@ class ThanosDB(object):
         
         :Example:
 
-        >>> db.lextend('avengers',['Captain America', 'Black Widow', 'Thor', 'Hawkeye'])
+        >>> db.lextend('avengers', ['Thor', 'Hawkeye'])
+        True
 
-        :param name: key of dict
+        :param name: Name of the key of list in db
         :type name: string
-        :param seq: list to be appended to list associated with key *name* in dict
+        :param seq: list to be appended to list associated with key *name* in db
         :type value: list
         :return: True if successful execution else false.
         :rtype: Boolean
-        
         '''
         self.db[name].extend(seq)
         self._autodumpdb()
@@ -299,11 +319,12 @@ class ThanosDB(object):
         :Example:
 
         >>> db.lgetall('avengers')
+        ['ironman', 'thor', 'captain-america', 'hulk']
 
-        :param name: key of dict
+        :param name: Name of the key of list in db
         :type name: string
-        :return: List associated with key *name* in dict else false if key not present.
-        :rtype: Boolean
+        :return: List associated with key *name* in db else false if key not present.
+        :rtype: list
 
         '''
         return self.db[name]
@@ -313,15 +334,14 @@ class ThanosDB(object):
         
         :Example:
 
-        >>> db.lget('avengers',1)
+        >>> db.lget('avengers', 1)
+        'ironman'
 
-        :param name: key of dict
+        :param name: Name of the key of list in db
         :type name: string
         :param pos: position of element in list
         :type pos: int
-        :return: Value at index *pos* of list associated with key *name* in dict.
-        :rtype: String
-        
+        :return: Value at index *pos* of list associated with key *name* in db.
         '''
         return self.db[name][pos]
 
@@ -332,9 +352,9 @@ class ThanosDB(object):
 
         >>> db.lremlist('avengers')
 
-        :param name: key of dict
+        :param name: Name of the key of list in db
         :type name: string
-        :return: Length of list deleted from dict with key *name*.
+        :return: Length of list deleted from db with key *name*.
         :rtype: int
         
         '''
@@ -348,11 +368,12 @@ class ThanosDB(object):
         
         :Example:
 
-        >>> db.lremvalue('avengers','Black Widow')
+        >>> db.lremvalue('avengers', 'Black Widow')
+        True
 
-        :param name: key of dict
+        :param name: Name of the key of list in db
         :type name: string
-        :param value: Value to be deleted from list with key *name* 
+        :param value: Value to be deleted from list
         :type value: string
         :return: True if successful execution else false.
         :rtype: Boolean
@@ -367,15 +388,14 @@ class ThanosDB(object):
         
         :Example:
 
-        >>> db.lpop('avengers',1)
+        >>> db.lpop('avengers', 1)
 
-        :param name: key of dict
+        :param name: Name of the key of list in db
         :type name: string
-        :param pos: index of list to be deleted with key *name* 
+        :param pos: index of the item in the list to be deleted
         :type pos: int
         :return: Value of deleted item.
         :rtype: string
-        
         '''
         value = self.db[name][pos]
         del self.db[name][pos]
@@ -388,12 +408,12 @@ class ThanosDB(object):
         :Example:
 
         >>> db.llen('avengers')
+        4
 
-        :param name: key of dict
+        :param name: Name of the key of list in db
         :type name: string
         :return: Length of list associated with key *name* in dict.
         :rtype: int
-        
         '''
         return len(self.db[name])
 
@@ -402,9 +422,9 @@ class ThanosDB(object):
         
         :Example:
 
-        >>> db.lappend('ironman',2,'Jarvis')
+        >>> db.lappend('ironman', 2, 'Jarvis')
 
-        :param name: Name of key of dict
+        :param name: Name of key of list
         :type name: string
         :param pos: Index of list
         :type pos: int
@@ -424,20 +444,32 @@ class ThanosDB(object):
         
         :Example:
 
-        >>> db.lexists('ironman','Jarvis')
+        >>> db.lexists('avengers', 'ironman')
+        False
 
-        :param name: Name of key of dict
+        :param name: Name of key of list in db
         :type name: string
         :param value: Element to check if present in list with key *name*
         :type value: string
         :return: True if *value* exists in list else false.
         :rtype: Boolean
-        
         '''
         return value in self.db[name]
 
     def dcreate(self, name):
-        '''Create a dict, name must be str'''
+        '''
+        Create a dict, name must be str
+
+        :Example:
+
+        >>> db.dcreate('infinity-stones')
+        True
+
+        :param name: Name of the key of dict in db
+        :type name: string
+        :return: True if *name* is string else Key-String Error.
+        :rtype: Boolean
+        '''
         if isinstance(name, str):
             self.db[name] = {}
             self._autodumpdb()
@@ -446,7 +478,26 @@ class ThanosDB(object):
             raise self.key_string_error
 
     def dadd(self, name, pair):
-        '''Add a key-value pair to a dict, "pair" is a tuple'''
+        '''
+        Add a key-value pair to a dict, "pair" is a tuple
+
+        :Example:
+        
+        >>> db.dadd('infinity-stone', ('Soul Stone', 'Vormir'))
+        True
+        >>> db.dadd('infinity-stone', ('Time Stone', 'Earth'))
+        True
+        >>> db.get('infinity-stone')
+        {'Soul Stone': 'Vormir', 'Time Stone': 'Earth'}
+
+        :param name: Name of the key of dict in db
+        :type name: string
+        :param pair: key-value tuple to be added
+        :type pair: tuple
+        :return: True if *name* is string else Key-String Error.
+        :rtype: Boolean
+        '''
+        # import pdb; pdb.set_trace()
         if self.exists(name):
             self.db[name][pair[0]] = pair[1]
             self._autodumpdb()
@@ -456,40 +507,144 @@ class ThanosDB(object):
         return True
 
     def dget(self, name, key):
-        '''Return the value for a key in a dict'''
+        '''
+        Return the value for a key in a dict
+
+        :Example:
+
+        >>> db.dget('infinity-stone', 'Soul Stone')
+        'Vormir'
+
+        :param name: Name of the key of dict in db
+        :type name: string
+        :param key: Name of key in dict
+        :type key: string
+        :return: Value if key is found in the dict
+        '''
         return self.db[name][key]
 
     def dgetall(self, name):
-        '''Return all key-value pairs from a dict'''
+        '''
+        Return all key-value pairs from a dict
+
+        :Example:
+
+        >>> db.dgetall('infinity-stone')
+        {'Soul Stone': 'Vormir', 'Time Stone': 'Earth'}
+
+        :param name: Name of the key of dict in db
+        :type name: string
+        :return: data stored in dict
+        :rtype: dict
+        '''
         return self.db[name]
 
     def drem(self, name):
-        '''Remove a dict and all of its pairs'''
+        '''
+        Remove a dict and all of its pairs
+
+        :Example:
+
+        >>> db.drem('infinity-stone')
+        True
+
+        :param name: Name of the key of dict in db
+        :type name: string
+        :return: True
+        :rtype: Boolean
+        '''
         del self.db[name]
         self._autodumpdb()
         return True
 
     def dpop(self, name, key):
-        '''Remove one key-value pair in a dict'''
+        '''
+        Remove one key-value pair in a dict
+
+        :Example:
+
+        >>> db.dpop('infinity-stone', 'Soul Stone')
+        'Vormir'
+
+        :param name: Name of the key in db
+        :type name: string
+        :param key: Name of the key in dict
+        :type key: string
+        :return: Value stored in key
+        :rtype: datatype of value
+        '''
         value = self.db[name][key]
         del self.db[name][key]
         self._autodumpdb()
         return value
 
     def dkeys(self, name):
-        '''Return all the keys for a dict'''
+        '''
+        Return all the keys for a dict
+
+        :Example:
+
+        >>> db.dkeys('infinity-stone')
+        dict_keys(['Soul Stone', 'Time Stone'])
+
+        :param name: Name of key of dict in db
+        :type name: string
+        :return: dict_keys
+        :rtype: dict_keys
+        '''
         return self.db[name].keys()
 
     def dvals(self, name):
-        '''Return all the values for a dict'''
+        '''
+        Return all the values for a dict
+
+        :Example:
+
+        >>> db.dvals('infinity-stone')
+        dict_values(['Soul Stone', 'Time Stone'])
+
+        :param name: Name of key of dict
+        :type name: string
+        :return: dict_values
+        :rtype: dict_values
+        '''
         return self.db[name].values()
 
     def dexists(self, name, key):
-        '''Determine if a key exists or not in a dict'''
+        '''
+        Determine if a key exists or not in a dict
+
+        :Example:
+
+        >>> db.dexists('infinity-stone', 'Soul Stone')
+        True
+
+        :param name: Name of key of dict in db
+        :type name: string
+        :param key: key in the dict
+        :type key: string
+        :return: True if key is found in the dict
+        :rtype: Boolean
+        '''
         return key in self.db[name]
 
     def dmerge(self, name1, name2):
-        '''Merge two dicts together into name1'''
+        '''
+        Merge two dicts together into name1
+
+        :Example:
+
+        >>> db.dadd('stone-owners', ('Dr. Strange', 'Time Stone'))
+        >>> db.dmerge('infinity-stone', 'stone-owners')
+        True
+
+        :param name1: Name of key of first dict
+        :type name1: string
+        :param name2: Name of key of second dict
+        :type name2: string
+        :return: True
+        :rtype: Boolean
+        '''
         first = self.db[name1]
         second = self.db[name2]
         first.update(second)
@@ -497,7 +652,15 @@ class ThanosDB(object):
         return True
 
     def deldb(self):
-        '''Delete everything from the database'''
+        '''
+        Delete everything from the database
+
+        :Example:
+
+        >>> db.deldb()
+        True
+
+        '''
         self.db = {}
         self._autodumpdb()
         return True
