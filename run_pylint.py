@@ -17,7 +17,7 @@ run = lint.Run(remaining_args, do_exit=False)
 score = run.linter.stats['global_note'] # Yes this is a terrible name for the score
 
 if score < threshold:
-    print('yes i am returing now')
+    print('Not pass, pylint score less than threshold')
     sys.exit(run.linter.msg_status)
 
 else:
