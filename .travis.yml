@@ -6,7 +6,6 @@ python:
 # command to install dependencies
 install:
   - pip install -r requirements.txt
-  - pip install pylint
 # command to run tests
 script:
   - python3 -m unittest tests/test_thanosdb.py -v
